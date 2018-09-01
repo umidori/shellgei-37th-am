@@ -29,6 +29,227 @@
 					### その２
 					#### 講師:USP友の会 鳥海秀一
 				</section>
+				<section data-markdown>
+					#### 講師： 鳥海秀一
+					* USP友の会の古参会員
+					* シェル芸勉強会午前の部をよく担当
+				</section>
+				<section data-markdown>
+					### 前回の振り返り
+				</section>
+				<section data-markdown>
+					### なぜ文字コード？
+					* シェル芸で扱うのは主にテキストストリーム
+					* テキストストリームの構成要素は文字コード
+					* すなわち文字コードはシェル芸の基本
+					* 午前の部は初心者向き勉強会
+					* 初心者が勉強すべきなのは基本
+				</section>
+				<section data-markdown>
+					### 文字コードとは
+					* 文字集合の各文字に対応する符号を一意に定めたもの
+					* 文字の識別子としての機能のみ扱う
+					* 扱う文字集合の違いやその他の理由により様々な文字コードが存在する
+				</section>
+				<section data-markdown>
+					## 補足
+				</section>
+				<section data-markdown>
+					### ゲシュタルトとは
+					* 形態・姿などの意味をもつドイツ語
+					* ゲシュタルト心理学の基本概念
+					* 全体を部分の総和とする考え方への反論として提起された
+				</section>
+				<section data-markdown>
+					### 前回の勉強会で解説したコマンド
+					* locale
+					* iconv
+					* 文字→数値変換コマンド
+					* 数値→文字変換コマンド
+					* 基数変換コマンド
+				</section>
+				<section data-markdown>
+					### localeコマンド
+					* 現在のロケール設定を確認するコマンド
+					* lacale -a でサポートしているロケール一覧を表示
+					* locale -m でサポートしている文字マッピング一覧を表示
+					* locale カテゴリ名 で カテゴリに属する全てのキーワードのロケール情報を表示
+					* locale キーワード名 で キーワードのロケール情報を表示
+					* マシンによりサポートしているカテゴリ、キーワードは異なる
+				</section>
+				<section data-markdown>
+					### iconv コマンド
+					* 文字コードを変換するコマンド
+					* iconv -l でサポートする文字コード一覧を表示
+					* iconv -f 変換元文字コード名 -t 変換先文字コード名 で文字コードの変換を行う
+				</section>
+				<section data-markdown>
+					### 文字→数値変換コマンド
+					* od コマンド
+					* hexdump コマンド
+					* xxd コマンド
+					* printf コマンド
+				</section>
+				<section data-markdown>
+					### 数値→文字変換コマンド
+					* xxd コマンド
+						* -r オプションで 16進数を文字に変換
+					* printf コマンド
+						* ¥nnn で 8進数を文字に変換
+						* ¥xnn で 16進数を文字に変換
+						* 扱える文字はASCIIのみ
+				</section>
+				<section data-markdown>
+					### 基数変換コマンド
+					* $(())
+						* 0xnnで16進数を10進数に変換
+						* 0nnnで8進数を10進数に変換
+						* n# で 2〜64進数を10進数に変換
+					* bc
+						* obase= ibase=で基数を任意に変換
+					* printf
+						* %d %o %x の書式で 10進 8進 16進数を扱う
+				</section>
+				<section data-markdown>
+					## 以上
+				</section>
+				<section data-markdown>
+					### 参考文献
+					* プログラマのための文字コード技術入門（技術評論社）
+				</section>
+				<section data-markdown>
+					### シェルで文字コードに触れてみる
+					### その２
+				</section>
+				<section data-markdown>
+					### 今回取り上げる文字コード
+					* EBCDICコード
+					* ASCIIコード
+					* ISO/IEC 646
+					* ISO/IEC 2022
+					* ISO/IEC 8859
+					* JIS X 0201
+					* JIS X 0208
+					* EUC_JP
+				</section>
+				<section data-markdown>
+					### EBCDICコードとは（その１）
+					* 1964年にIBMがSystem360のために用意した8bitの文字コード
+					* Extended Binary Coded Decimal Interchange Code（拡張二進化十進コード）から命名
+					* 主にメインフレームやオフィスコンピュータが使用してきたコード
+					* 様々なEBCDICコードがあり、共通しているのは英大文字、数字、20個ぐらいの記号のみ
+				</section>
+				<section data-markdown>
+					### EBCDICコードとは（その２）
+					* 日本語用のEBCDICコードだけでも10種類以上のコードがある
+					* Ubuntuのiconvが用意している日本語EBCDICコードとして「EBCDIC-JP-E」「EBCDIC-JP-KANA」「CP281」「CP290」「CP930」「CP939」「CP1390」「CP1399」がある
+				</section>
+				<section data-markdown>
+					### シェルでEBCDICのコード表を作る
+					* tabs -3
+					* for((i=4;i&lt;16;i++));do printf '\t%02X' $(( i\*16));done;echo;for((j=0;j&lt;16;j++));do printf '%02X' $j;for((i=4;i&lt;16;i++));do printf '\t';printf '%02X' $((i*16+j))|xxd -p -r|iconv -f ebcdic-jp-e -t utf8 -c;done;echo;done
+				</section>
+				<section data-markdown>
+					### シェルで日本語EBCDICコードを弄ぶ
+					* echo abcdef | iconv -f utf-8 -t cp930 | iconv -f cp939 -t utf-8
+				</section>
+				<section data-markdown>
+					### ASCIIコードとは
+					* 1963年にASA(アメリカ規格協会、現在のANSI)が定めた規格
+					* American Standard Code for Information Interchangeの略
+					* 7bitの１バイトコード
+					* 0x00〜0x1F、0x7Fは制御コード
+				</section>
+				<section data-markdown>
+					### シェルでASCIIのコード表を作る
+					* tabs -3
+					* for((i=2;i&lt;16;i++));do printf '\t%02X' $(( i\*16));done;echo;for((j=0;j&lt;16;j++));do printf '%02X' $j;for((i=2;i&lt;16;i++));do printf '\t';printf '%02X' $((i*16+j))|xxd -p -r|iconv -f ascii -t utf8 -c;done;echo;done
+				</section>
+				<section data-markdown>
+					### ISO/IEC 646とは
+					* ASCIIをベースにしてつくられた国際対応の7bit の文字コードコード
+					* 各国の都合に応じて文字を変更してもよい符号位置を定めている
+					* 変更してもよい符号位置は、0x40、0x5B〜0x5E、0x60、0x7B〜0x7E
+					* 日本語版では、0x5Cの文字と0x7Eの文字がASCIIと異なる
+				</section>
+				<section data-markdown>
+					### シェルで各国の違いを確認する
+					* tabs -3
+					* c='40 5B 5C 5D 5E 60 7B 7C 7D 7E'
+					* l=$([各国のISO646コード名を出力するコマンド])
+					* printf '%10s';printf '\t%s' $c;echo;for j in $l;do printf '%-10s' $j;for i in $c; do printf '\t';printf $i|xxd -p -r|iconv -f $j -t utf-8 -c;done;echo;done
+				</section>
+				<section data-markdown>
+					### ISO/IEC 2022とは
+					* ISO/IEC 646 に準拠した複数の符号表を切り替えて多言語の処理を実現することを目的としたコード
+					* 文字集合の切替のためにエスケープシーケンスを使う
+					* ISO-2022-JPでは、1バイト文字から2バイト文字への切替には0x1B、0x24、0x42を、2バイト文字から1バイト文字には0x1B、0x28、0x42を使う
+					* 理論的には世界中の任意の符号化文字集合を組み合わせて使用することができた
+				</section>
+				<section data-markdown>
+					### ISO-2022-JPの制御文字を除去
+					* printf シェル芸 | iconv -f utf-8 -t iso-2022-jp | xxd -p -u | sed 's/^......\\(.*\\)......$/\1/' | xxd -p -r;echo
+				</section>
+				<section data-markdown>
+					### 除去した制御文字を付加
+					* printf '%s' "%7%'%k7]" | xxd -p | sed 's/.*/1b2442&1b28420a/' | xxd -p -r | iconv -f iso-2022-jp -t utf-8
+				</section>
+				<section data-markdown>
+					### ISO/IEC 8859とは
+					* 必要とする文字数が比較的少ないヨーロッパの言語を書き表すための文字コードとして普及した
+					* 1バイトではヨーロッパ全域の文字を網羅することはできないため、各地域ごとを対象とした15の部に分かれている
+					* Macでは optionキーとのコンビネーションで入力できる文字とかなり対応している
+				</section>
+				<section data-markdown>
+					### シェルでISO-8859のコード表を作る
+					* iconv -l | tr ' ' \\\\n | grep ISO-8859- | while read k;do printf '\\n[%s]\\n' $k;for((i=2;i&lt;16;i++));do printf '\t%02X' $((i\*16));done;echo;for((j=0;j&lt;16;j++));do printf '%02X' $j;for((i=2;i&lt;16;i++));do printf '\t';if ((i!=8 && i!=9)); then printf '%02X' $((i*16+j))|xxd -p -r|iconv -f $k -t utf8 -c;fi;done;echo;done;done
+				</section>
+				<section data-markdown>
+					### JIS X 0201とは
+					* 日本工業規格 (JIS) の制定している文字コード規格で、現存のJISにおける最も古い文字コード
+					* 規格名称は7ビット及び8ビットの情報交換用符号化文字集合
+					* ラテン文字集合と片仮名集合の二つの符号化文字集合を定めている
+					* ラテン文字集合はISO646-JPと同等となっている
+				</section>
+				<section data-markdown>
+					### JIS X 0201のコード表を作る
+					* tabs -3
+					* for((i=2;i&lt;16;i++));do printf '\t%02X' $(( i\*16));done;echo;for((j=0;j&lt;16;j++));do printf '%02X' $j;for((i=2;i&lt;16;i++));do printf '\t';printf '%02X' $((i*16+j))|xxd -p -r|iconv -f jis_x0201 -t utf8 -c;done;echo;done
+				</section>
+				<section data-markdown>
+					### JIS X 0208とは
+					* 日本で使われる漢字・平仮名・片仮名等を収録した2バイトの符号化文字集合
+					* ASCIIと同じ範囲のビット組み合わせを2バイト続けて並べることで1文字を表現する
+					* 94個の区と94個の点の組み合わせでコードを表現する
+					* 9区から15区までおよび85区から94区までは空き領域となっている
+					* 上記以外の区のうちでも一部の点は空き領域がある
+					* コード値は上位バイトは区番号に0x20を加算した値、下位バイトは点番号に0x20を加算した値
+				</section>
+				<section data-markdown>
+					### JIS X 0208のコードを確認する
+					* for((i=1;i&lt;=94;i++));do for((j=1;j&lt;=94;j++));do printf '%02d区%02d点 ' $i $j;printf '%02X%02X' $((i+0x20)) $((j+0x20))|xxd -p -r|iconv -f jis_x0208 -t utf-8 -c 2>/dev/null;echo;done;done
+				</section>
+				<section data-markdown>
+					### EUC-JPとは
+					* Extended UNIX Code Packed Format for Japaneseの略
+					* その名のとおり、Unix系OSの環境で広く使われている
+					* ASCIIとJIS X 0208 を同時に用いる8ビットの符号化方式
+					* 日本語文字コードはJIS X 0208の文字コードの1バイト目、2バイト目ともに0x80を加算した値
+					* 半角カナも扱えるが、他の日本語文字とは扱いが異なる
+				</section>
+				<section data-markdown>
+					### JIS X 0208をEUC-JPに変換する
+					* printf シェル芸 | iconv -f utf-8 -t jis_x0208 | xxd -p | fold -2 | while read xtf '%02X\\n' $((0x$x+0x80));done | xxd -p -r | iconv -f euc-jp -t utf-8;echo
+				</section>
+				<section data-markdown>
+					### 今回はここまで
+				</section>
+				<section data-markdown>
+					### 続きは次回で
+				</section>
+				<section data-markdown>
+					### ご静聴ありがとうございました
+				</section>
 			</div>
 		</div>
 		<script src="lib/js/head.min.js"></script>
